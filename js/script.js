@@ -8,6 +8,39 @@ let piezaTiempo = 0;
 let envio = false;
 let seguir = false;
 
+class colores{
+    constructor(id, color, stock){
+        this.id = id;
+        this.color = color;
+        this.stock = stock;
+    }
+}
+
+class stockColores{
+    constructor(){
+        this.coloresDisponibles = [
+            new colores(1, "azul", 1000),
+            new colores(2, "rojo", 1000),
+            new colores(3, "blanco", 1000),
+            new colores(4, "negro", 1000),
+            new colores(5, "amarillo", 1000),
+            new colores(6, "rosa", 1000),
+        ]
+        this.items =[];
+        }
+    buscarColor(color){
+        return this.coloresDisponibles.find((colores) => colores.color.toLoweCase() === color.toLoweCase()
+        )
+    }
+    descontarStock(colores, cantidad){
+        this.items.push({
+            colores: colores.color,
+            cantidad: cantidad,
+            subtotal: colores.stock - cantidad,
+        })
+    }
+}
+
 console.log ("Precios de base en AR$");
 console.log ("Precio de Filamento x kg = ",precioFilamento);
 console.log ("Precio de trabajo x hr = ",precioHora);
