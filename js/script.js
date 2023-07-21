@@ -1,45 +1,42 @@
-alert ("Welcome to la calculadora costos para impresion 3D de Jean");
+alert ("Welcome to la calculadora costos de filamentos para impresion 3D de Jean");
 let precioDolar = prompt("ingrese el precio del dolar al dia de la fecha");
-let precioFilamento = 7*precioDolar;
-let precioHora = 0.2*precioDolar;
-let precioEnvio = 0.5*precioDolar;
-let piezaFilamento = 0;
-let piezaTiempo = 0;
-let envio = false;
-let seguir = false;
+if (!(precioDolar>0)) {
+    alert ("Eso no es un precio de Dolar")
+    brake
+}
 
 class colores{
-    constructor(id, color, precio){
+    constructor(id, nombreColor, precio){
         this.id = id;
-        this.color = color;
+        this.nombreColor = nombreColor;
         this.precio = precio;
     }
 }
 
-class consumoColores{
+class Carrito{
     constructor(){
         this.coloresDisponibles = [
-            new colores(1, "azul", 6.8*precioDolar),
-            new colores(2, "rojo", 7.2*precioDolar),
-            new colores(3, "blanco", 6.7*precioDolar),
-            new colores(4, "negro", 6.9*precioDolar),
-            new colores(5, "amarillo", 7*precioDolar),
-            new colores(6, "rosa", 7.1*precioDolar),
+            new colores(1, "azul", 6.8*precioDolar/1000),
+            new colores(2, "rojo", 7.2*precioDolar/1000),
+            new colores(3, "blanco", 6.7*precioDolar/1000),
+            new colores(4, "negro", 6.9*precioDolar/1000),
+            new colores(5, "amarillo", 7*precioDolar/1000),
+            new colores(6, "rosa", 7.1*precioDolar/1000),
         ]
         this.items =[];
         }
 
-    buscarColor(color){
-        return this.coloresDisponibles.find((colores) =>
-        colores.color.toLoweCase() === color.toLoweCase()
+    buscarColor(nombreColor){
+        return this.coloresDisponibles.find((color) => 
+        color.nombreColor.toLowerCase() === nombreColor.toLowerCase()
         )
     }
 
-    CostoPieza(colores, cantidad){
+    CostoPieza(color, cantidad){
         this.items.push({
-            colores: colores.color,
+            colores: color.nombreColor,
             cantidad: cantidad,
-            subtotal: colores.consumo * cantidad,
+            subtotal: color.precio * cantidad,
         })
     }
 
@@ -49,11 +46,11 @@ class consumoColores{
             "Ingrese el color de la pieza a fabricar: (Azul, Blanco, Negro, Rosa, Amarillo, Rojo)"
         );
     
-        let producto = this.buscarColor(seleccion);
+        let color = this.buscarColor(seleccion);
     
-        if (producto) {
-            let cantidad = parseInt(prompt("Ingrese la cantidad de filamento a consumir:"));
-            this.agregarItem(producto, cantidad);
+        if (color) {
+            let cantidad = parseInt(prompt("Ingrese la cantidad de filamento a consumir (g):"));
+            this.CostoPieza(color, cantidad);
         } else {
             alert("El color seleccionado no existe. Por favor, vuelva a intentarlo.");
         }
@@ -65,20 +62,23 @@ class consumoColores{
     }
 
     calcularTotal(){
-        console.log("Consumo de filamentos")
+        console.log("Consumo de filamentos");
         this.items.forEach((item) => {
-            console.log(`- ${item.cantidad} ${item.producto}: ${item.subtotal}`);
+            console.log(`- ${item.cantidad}g ${item.colores}: ${item.subtotal} AR$`);
         });
-    }
 
     let total = this.items.reduce((sum, item) => sum + item.subtotal, 0);
-    console.log(`Total de costo de filamentos: ${total}`);
+    console.log(`Total de costo de filamentos: ${total} AR$`);
+    }
+
+    vaciarCarrito() {
+        this.items = [];
+        console.log("El carrito ha sido vaciado.");
+    }
 }
 
-vaciarCarrito() {
-    this.items = [];
-    console.log("El carrito ha sido vaciado.");
-}
+const carrito = new Carrito();
+carrito.confirmarCarrito();
 
 if (carrito.items.length > 0) {
     if (confirm("¿Desea vaciar el carrito?")) {
@@ -87,38 +87,3 @@ if (carrito.items.length > 0) {
 }
 
 carrito.calcularTotal();
-
-console.log ("Precios de base en AR$");
-console.log ("Precio de Filamento x kg = ",precioFilamento);
-console.log ("Precio de trabajo x hr = ",precioHora);
-console.log ("Costo de envio = ",precioEnvio);
-
-function calculadora1() {
-    let resultado1=(piezaFilamento*(precioFilamento/1000))+(precioHora*piezaTiempo);
-    alert("El precio (AR$) de la pieza es: "+resultado1)
-}
-function calculadora2() {
-    let resultado2 =((piezaFilamento*(precioFilamento/1000))+(precioHora*piezaTiempo)+precioEnvio);
-    alert("El precio (AR$) de la pieza con envio es: "+resultado2)
-}
-
-seguir = confirm("Desea calcular un trabajo?");
-if (seguir) {
-    do {
-        piezaFilamento=prompt("Ingrese el consumo de filamento de la pieza en gramos");
-        piezaTiempo=prompt("Ingrese el tiempo de trabajo para la pieza en horas");
-        envio=confirm("Se debe enviar?");
-        if (envio) {
-            calculadora2()
-        } else {
-            calculadora1()
-        }
-        seguir=confirm("desea realizar un nuevo calculo de costo de pieza?")
-    } while (
-        seguir
-    )
-    document.write("Gracias por usar mi calculadora");
-} else {
-    document.write ("Hoy no se trabaja")
-}
-
