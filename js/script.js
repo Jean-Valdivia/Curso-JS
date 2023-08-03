@@ -1,89 +1,153 @@
-alert ("Welcome to la calculadora costos de filamentos para impresion 3D de Jean");
-let precioDolar = prompt("ingrese el precio del dolar al dia de la fecha");
-if (!(precioDolar>0)) {
-    alert ("Eso no es un precio de Dolar")
-    brake
+let precioDolar = 550
+let enCarrito = []
+
+if (localStorage.getItem("carrito")) {
+    enCarrito = JSON.parse(localStorage.getItem("carrito"))
+} else {
+    localStorage.setItem("carrito", JSON.stringify(enCarrito))
 }
 
-class colores{
-    constructor(id, nombreColor, precio){
-        this.id = id;
-        this.nombreColor = nombreColor;
-        this.precio = precio;
+function buscarProducto(buscado, array) {
+    let busqueda = array.filter(
+        (piezas) => piezas.nombre.toLowerCase().includes(buscado.toLowerCase()) || piezas.nombre.toLowerCase().includes(buscado.toLowerCase())
+    )
+
+    if (busqueda.length == 0) {
+        coincidencia.innerHTML = ""
+        let nuevoDiv = document.createElement("div")
+        nuevoDiv.innerHTML = '<p> No hay coincidencias </p>'
+        coincidencia.appenChild(nuevoDiv)
+        mostrarCatalogo(array)
+    } else {
+        coincidencia.innerHTML = ""
+        mostrarCatalogo(busqueda)
     }
 }
 
-class Carrito{
-    constructor(){
-        this.coloresDisponibles = [
-            new colores(1, "azul", 6.8*precioDolar/1000),
-            new colores(2, "rojo", 7.2*precioDolar/1000),
-            new colores(3, "blanco", 6.7*precioDolar/1000),
-            new colores(4, "negro", 6.9*precioDolar/1000),
-            new colores(5, "amarillo", 7*precioDolar/1000),
-            new colores(6, "rosa", 7.1*precioDolar/1000),
-        ]
-        this.items =[];
-        }
+function ordenarMayorMenor(array) {
+    let mayorMenor = [].concat(array)
+    mayorMenor.sort((a, b) => (b.precio - a.precio))
+    mostrarCatalogo(mayorMenor)
+}
 
-    buscarColor(nombreColor){
-        return this.coloresDisponibles.find((color) => 
-        color.nombreColor.toLowerCase() === nombreColor.toLowerCase()
-        )
-    }
+function ordenarMenorMayor(array) {
+    let menorMayor = [].concat(array)
+    menorMayor.sort((a, b) => (a.precio - b.precio))
+    mostrarCatalogo(menorMayor)
+}
 
-    CostoPieza(color, cantidad){
-        this.items.push({
-            colores: color.nombreColor,
-            cantidad: cantidad,
-            subtotal: color.precio * cantidad,
+function ordenarAlfabeticamente(array) {
+    let alfabeticamente = [].concat(array)
+    alfabeticamente.sort((a, b) => {
+        return 0;
+    })
+    mostrarCatalogo(alfabeticamente)
+}
+
+let divProductos = document.getElementById("productos")
+let btnGuardarProducto = document.getElementById("guardarProductoBtn")
+let buscador = document.getElementById("buscador")
+let btnVerCatalogo = document.getElementById("verCatalogo")
+let btnOcultarCatalogo = document.getElementById("ocultarCatalogo")
+let modalBody = document.getElementById("modal-body")
+let botonCarrito = document.getElementById("botonCarrito")
+let coincidencia = document.getElementById("coincidencia")
+let selectOrden = document.getElementById("selectOrden")
+
+function mostrarCatalogo(array) {
+    divProductos.innerHTML = ""
+
+    for (const pieza of array) {
+        let nuevaPieza = document.createElement("div")
+        nuevaPieza.classList.add("col-12", "col-md-6", "col-lg-4", "my-4")
+        nuevaPieza.innerHTML = `<div id="${pieza.id}" class="card" style="width: 18rem;">
+        <img class="card-img-top img-fluid" style="height: 200px;"src="assets/${pieza.imagen}" alt="${pieza.titulo} de ${pieza.color}">
+        <div class="card-body">
+            <h4 class="card-title">${pieza.nombre}</h4>
+            <p>Color: ${pieza.color}</p>
+            <p class="">Precio: ${pieza.precio}</p>
+        <button id="agregarBtn${pieza.id}" class="btn btn-outline-success">Agregar al carrito</button>
+        </div>
+</div>`
+        divProductos.appendChild(nuevaPieza)
+        let btnAgregar = document.getElementById(`agregarBtn${pieza.id}`)
+
+        btnAgregar.addEventListener("click", () => {
+            agregarAlCarrito(pieza)
         })
     }
-
-    confirmarCarrito() {
-        while (true) {
-        let seleccion = prompt(
-            "Ingrese el color de la pieza a fabricar: (Azul, Blanco, Negro, Rosa, Amarillo, Rojo)"
-        );
-    
-        let color = this.buscarColor(seleccion);
-    
-        if (color) {
-            let cantidad = parseInt(prompt("Ingrese la cantidad de filamento a consumir (g):"));
-            this.CostoPieza(color, cantidad);
-        } else {
-            alert("El color seleccionado no existe. Por favor, vuelva a intentarlo.");
-        }
-
-        if (!confirm("¿Desea agregar otro producto al carrito?")) {
-            break;
-            }
-        }
-    }
-
-    calcularTotal(){
-        console.log("Consumo de filamentos");
-        this.items.forEach((item) => {
-            console.log(`- ${item.cantidad}g ${item.colores}: ${item.subtotal} AR$`);
-        });
-
-    let total = this.items.reduce((sum, item) => sum + item.subtotal, 0);
-    console.log(`Total de costo de filamentos: ${total} AR$`);
-    }
-
-    vaciarCarrito() {
-        this.items = [];
-        console.log("El carrito ha sido vaciado.");
-    }
 }
 
-const carrito = new Carrito();
-carrito.confirmarCarrito();
-
-if (carrito.items.length > 0) {
-    if (confirm("¿Desea vaciar el carrito?")) {
-    carrito.vaciarCarrito();
-    }
+function agregarAlCarrito(pieza) {
+    productosEnCarrito.push(pieza)
+    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
 }
 
-carrito.calcularTotal();
+function cargarProductosCarrito(array) {
+    modalBody.innerHTML = ""
+
+    array.forEach(productoCarrito => {
+        modalBody.innerHTML += `<div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
+        <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="${productoCarrito.nombre}">
+        <div class="card-body">
+            <h4 class="card-title">${productoCarrito.nombre}</h4>
+            <p class="card-text">$${productoCarrito.precio}</p> 
+            <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
+        </div>    
+    </div>`
+    });
+
+    array.forEach((productoCarrito, indice) => {
+        document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
+            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
+            cardProducto.remove()
+            productosEnCarrito.splice(indice, 1)
+            localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+        })
+    });
+}
+
+function cargarPieza(array) {
+    let inputNombre = document.getElementById("nombreInput")
+    let inputColor = document.getElementById("colorInput")
+    let inputPrecio = document.getElementById("precioInput")
+
+    let piezaCreada = new pieza(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), "piezaNueva.jpg")
+    array.push(piezaCreada)
+    localStorage.setItem("stock", JSON.stringify(array))
+    mostrarCatalogo(array)
+    inputNombre.value = ""
+    inputColor.value = ""
+    inputPrecio.value = ""
+}
+
+btnGuardarPieza.addEventListener("click", () => {
+    cargarPieza(stock)
+})
+
+buscador.addEventListener("input", () => {
+    buscarInfo(buscador.value, stock)
+})
+
+botonCarrito.addEventListener("click", () => {
+    cargarProductosCarrito(productosEnCarrito)
+})
+
+selectOrden.addEventListener("change", () => {
+    if (selectOrden.value == 1) {
+        ordenarMayorMenor(stock)
+    }
+
+    else if (selectOrden.value == 2) {
+        ordenarMenorMayor(stock)
+    }
+
+    else if (selectOrden.value == 3) {
+        ordenarAlfabeticamente(stock)
+    }
+    else {
+        mostrarCatalogo(stock)
+    }
+})
+
+mostrarCatalogo(stock)
