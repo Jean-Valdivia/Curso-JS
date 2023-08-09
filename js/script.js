@@ -8,6 +8,7 @@ let modalBody = document.getElementById("modal-body")
 let botonCarrito = document.getElementById("botonCarrito")
 let coincidencia = document.getElementById("coincidencia")
 let selectOrden = document.getElementById("selectOrden")
+let btnBuscar = document.getElementById("btnBuscar")
 
 if (localStorage.getItem("carrito")) {
     enCarrito = JSON.parse(localStorage.getItem("carrito"))
@@ -110,7 +111,6 @@ function cargarPieza(array) {
     let inputColor = document.getElementById("colorInput")
     let inputPrecio = document.getElementById("precioInput")
     let inputImagen = document.getElementById("imagenInput")
-
     let piezaCreada = new pieza(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), inputImagen.value)
     array.push(piezaCreada)
     localStorage.setItem("stock", JSON.stringify(array))
@@ -125,7 +125,8 @@ btnGuardarPieza.addEventListener("click", () => {
     cargarPieza(stock)
 })
 
-buscador.addEventListener("input", () => {
+
+btnBuscar.addEventListener("click", () => {
     buscarProducto(buscador.value, stock)
 })
 
