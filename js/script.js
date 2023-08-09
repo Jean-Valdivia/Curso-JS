@@ -1,5 +1,13 @@
-let precioDolar = 550
 let enCarrito = []
+let divProductos = document.getElementById("productos")
+let btnGuardarProducto = document.getElementById("guardarProductoBtn")
+let buscador = document.getElementById("buscador")
+let btnVerCatalogo = document.getElementById("verCatalogo")
+let btnOcultarCatalogo = document.getElementById("ocultarCatalogo")
+let modalBody = document.getElementById("modal-body")
+let botonCarrito = document.getElementById("botonCarrito")
+let coincidencia = document.getElementById("coincidencia")
+let selectOrden = document.getElementById("selectOrden")
 
 if (localStorage.getItem("carrito")) {
     enCarrito = JSON.parse(localStorage.getItem("carrito"))
@@ -9,15 +17,15 @@ if (localStorage.getItem("carrito")) {
 
 function buscarProducto(buscado, array) {
     let busqueda = array.filter(
-        (piezas) => piezas.nombre.toLowerCase().includes(buscado.toLowerCase()) || piezas.nombre.toLowerCase().includes(buscado.toLowerCase())
+        (piezas) => piezas.nombre.toLowerCase().includes(buscado.toLowerCase()) ||
+        piezas.color.toLowerCase().includes(buscado.toLowerCase())
     )
 
     if (busqueda.length == 0) {
         coincidencia.innerHTML = ""
         let nuevoDiv = document.createElement("div")
         nuevoDiv.innerHTML = '<p> No hay coincidencias </p>'
-        coincidencia.appenChild(nuevoDiv)
-        mostrarCatalogo(array)
+        coincidencia.appendChild(nuevoDiv)
     } else {
         coincidencia.innerHTML = ""
         mostrarCatalogo(busqueda)
@@ -44,15 +52,6 @@ function ordenarAlfabeticamente(array) {
     mostrarCatalogo(alfabeticamente)
 }
 
-let divProductos = document.getElementById("productos")
-let btnGuardarProducto = document.getElementById("guardarProductoBtn")
-let buscador = document.getElementById("buscador")
-let btnVerCatalogo = document.getElementById("verCatalogo")
-let btnOcultarCatalogo = document.getElementById("ocultarCatalogo")
-let modalBody = document.getElementById("modal-body")
-let botonCarrito = document.getElementById("botonCarrito")
-let coincidencia = document.getElementById("coincidencia")
-let selectOrden = document.getElementById("selectOrden")
 
 function mostrarCatalogo(array) {
     divProductos.innerHTML = ""
@@ -61,7 +60,7 @@ function mostrarCatalogo(array) {
         let nuevaPieza = document.createElement("div")
         nuevaPieza.classList.add("col-12", "col-md-6", "col-lg-4", "my-4")
         nuevaPieza.innerHTML = `<div id="${pieza.id}" class="card" style="width: 18rem;">
-        <img class="card-img-top img-fluid" style="height: 200px;"src="assets/${pieza.imagen}" alt="${pieza.titulo} de ${pieza.color}">
+        <img class="card-img-top img-fluid" style="height: 200px;"src="./assets/${pieza.imagen}" alt="${pieza.nombre} de ${pieza.color}">
         <div class="card-body">
             <h4 class="card-title">${pieza.nombre}</h4>
             <p>Color: ${pieza.color}</p>
@@ -71,7 +70,6 @@ function mostrarCatalogo(array) {
 </div>`
         divProductos.appendChild(nuevaPieza)
         let btnAgregar = document.getElementById(`agregarBtn${pieza.id}`)
-
         btnAgregar.addEventListener("click", () => {
             agregarAlCarrito(pieza)
         })
@@ -111,14 +109,16 @@ function cargarPieza(array) {
     let inputNombre = document.getElementById("nombreInput")
     let inputColor = document.getElementById("colorInput")
     let inputPrecio = document.getElementById("precioInput")
+    let inputImagen = document.getElementById("imagenInput")
 
-    let piezaCreada = new pieza(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), "piezaNueva.jpg")
+    let piezaCreada = new pieza(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), inputImagen.value)
     array.push(piezaCreada)
     localStorage.setItem("stock", JSON.stringify(array))
     mostrarCatalogo(array)
     inputNombre.value = ""
     inputColor.value = ""
     inputPrecio.value = ""
+    inputImagen.value = ""
 }
 
 btnGuardarPieza.addEventListener("click", () => {
@@ -126,7 +126,7 @@ btnGuardarPieza.addEventListener("click", () => {
 })
 
 buscador.addEventListener("input", () => {
-    buscarInfo(buscador.value, stock)
+    buscarProducto(buscador.value, stock)
 })
 
 botonCarrito.addEventListener("click", () => {

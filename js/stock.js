@@ -1,3 +1,5 @@
+let precioDolar = 550
+
 class piezas{
     constructor(id, nombre, color, precio, imagen){
         this.id = id;
@@ -8,12 +10,12 @@ class piezas{
     }
 }
 
-const pieza1 = new piezas (1, "Portasahumerio", "azul", 6.8*precioDolar);
-const pieza2 = new piezas (2, "grip picatinny", "rojo", 7.2*precioDolar);
-const pieza3 = new piezas (3, "cortante bob esponja", "amarillo", 1*precioDolar);
-const pieza4 = new piezas (4, "cortante calamardo", "rosa", 1*precioDolar);
-const pieza5 = new piezas (5, "cortante ", "amarillo", 1*precioDolar);
-const pieza6 = new piezas (6, "cortante bob esponja", "amarillo", 1*precioDolar);
+const pieza1 = new piezas (1, "afa", "azul", 6.8*precioDolar, "afa.png");
+const pieza2 = new piezas (2, "cortante caballito de mar", "rojo", 7.2*precioDolar, "caballitodemar.jpg");
+const pieza3 = new piezas (3, "cortante cancha", "amarillo", 1*precioDolar, "cancha.jpg");
+const pieza4 = new piezas (4, "cortante candado", "rosa", 1*precioDolar, "candado.jpg");
+const pieza5 = new piezas (5, "cortante copa", "blanco", 1*precioDolar, "copa.jpg");
+const pieza6 = new piezas (6, "cortante pulpo", "amarillo", 1*precioDolar, "pulpo.jpg");
 
 let stock = []
 
