@@ -8,6 +8,7 @@ let modalBody = document.getElementById("offcanvas-body")
 let botonCarrito = document.getElementById("botonCarrito")
 let coincidencia = document.getElementById("coincidencia")
 let selectOrden = document.getElementById("selectOrden")
+let btnBuscar = document.getElementById("btnBuscar")
 let precioTotal = document.getElementById("precioTotal")
 
 if (localStorage.getItem("carrito")) {
@@ -134,7 +135,8 @@ btnGuardarPieza.addEventListener("click", () => {
     cargarPieza(stock)
 })
 
-buscador.addEventListener("input", () => {
+
+btnBuscar.addEventListener("click", () => {
     buscarProducto(buscador.value, stock)
 })
 
