@@ -1,13 +1,14 @@
-let enCarrito = []
+let productosEnCarrito = []
 let divProductos = document.getElementById("productos")
-let btnGuardarProducto = document.getElementById("guardarProductoBtn")
+let btnGuardarPieza = document.getElementById("btnGuardarPieza")
 let buscador = document.getElementById("buscador")
 let btnVerCatalogo = document.getElementById("verCatalogo")
 let btnOcultarCatalogo = document.getElementById("ocultarCatalogo")
-let modalBody = document.getElementById("modal-body")
+let modalBody = document.getElementById("offcanvas-body")
 let botonCarrito = document.getElementById("botonCarrito")
 let coincidencia = document.getElementById("coincidencia")
 let selectOrden = document.getElementById("selectOrden")
+let precioTotal = document.getElementById("precioTotal")
 
 if (localStorage.getItem("carrito")) {
     enCarrito = JSON.parse(localStorage.getItem("carrito"))
@@ -81,8 +82,12 @@ function agregarAlCarrito(pieza) {
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
 }
 
+
+
 function cargarProductosCarrito(array) {
     modalBody.innerHTML = ""
+
+    let precioTotal = 0;
 
     array.forEach(productoCarrito => {
         modalBody.innerHTML += `<div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
@@ -92,7 +97,9 @@ function cargarProductosCarrito(array) {
             <p class="card-text">$${productoCarrito.precio}</p> 
             <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
         </div>    
-    </div>`
+        </div>`
+
+        precioTotal += productoCarrito.precio;
     });
 
     array.forEach((productoCarrito, indice) => {
@@ -103,7 +110,9 @@ function cargarProductosCarrito(array) {
             localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
         })
     });
+    document.getElementById("precioTotal").textContent = `Precio Total: $${precioTotal}`;
 }
+
 
 function cargarPieza(array) {
     let inputNombre = document.getElementById("nombreInput")
@@ -111,7 +120,7 @@ function cargarPieza(array) {
     let inputPrecio = document.getElementById("precioInput")
     let inputImagen = document.getElementById("imagenInput")
 
-    let piezaCreada = new pieza(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), inputImagen.value)
+    let piezaCreada = new piezas(array.length + 1, inputNombre.value, inputColor.value, parseInt(inputPrecio.value), inputImagen.value)
     array.push(piezaCreada)
     localStorage.setItem("stock", JSON.stringify(array))
     mostrarCatalogo(array)
