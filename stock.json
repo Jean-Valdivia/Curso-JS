@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "nombre": "afa",
+        "color": "azul",
+        "precio": 6.8,
+        "imagen": "afa.png"
+    },
+    {
+        "id": 2,
+        "nombre": "cortante caballito de mar",
+        "color": "rojo",
+        "precio": 7.2,
+        "imagen": "caballitodemar.jpg"
+    },
+    {
+        "id": 3,
+        "nombre": "cortante cancha",
+        "color": "amarillo",
+        "precio": 1,
+        "imagen": "cancha.jpg"
+    },
+    {
+        "id": 4,
+        "nombre": "cortante candado",
+        "color": "rosa",
+        "precio": 1,
+        "imagen": "candado.jpg"
+    },
+    {
+        "id": 5,
+        "nombre": "cortante copa",
+        "color": "blanco",
+        "precio": 1,
+        "imagen": "copa.jpg"
+    },
+    {
+        "id": 6,
+        "nombre": "cortante pulpo",
+        "color": "amarillo",
+        "precio": 1,
+        "imagen": "pulpo.jpg"
+    }
+
+]
+

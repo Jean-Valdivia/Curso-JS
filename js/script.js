@@ -1,3 +1,5 @@
+let precioDolar = 550
+let stock = []
 let productosEnCarrito = []
 let divProductos = document.getElementById("productos")
 let btnGuardarPieza = document.getElementById("btnGuardarPieza")
@@ -12,9 +14,23 @@ let btnBuscar = document.getElementById("btnBuscar")
 let precioTotal = document.getElementById("precioTotal")
 
 if (localStorage.getItem("carrito")) {
-    enCarrito = JSON.parse(localStorage.getItem("carrito"))
+    productosEnCarrito = JSON.parse(localStorage.getItem("carrito"))
 } else {
-    localStorage.setItem("carrito", JSON.stringify(enCarrito))
+    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+}
+
+function getData() {
+    return fetch('./stock.json').then(response => response.json())
+}
+
+class piezas{
+    constructor(id, nombre, color, precio, imagen){
+        this.id = id;
+        this.nombre = nombre;
+        this.color = color;
+        this.precio = precio;
+        this.imagen = imagen;
+    }
 }
 
 function buscarProducto(buscado, array) {
@@ -66,7 +82,7 @@ function mostrarCatalogo(array) {
         <div class="card-body">
             <h4 class="card-title">${pieza.nombre}</h4>
             <p>Color: ${pieza.color}</p>
-            <p class="">Precio: ${pieza.precio}</p>
+            <p class="">Precio: ${pieza.precio*precioDolar}</p>
         <button id="agregarBtn${pieza.id}" class="btn btn-outline-success">Agregar al carrito</button>
         </div>
 </div>`
@@ -81,6 +97,11 @@ function mostrarCatalogo(array) {
 function agregarAlCarrito(pieza) {
     productosEnCarrito.push(pieza)
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+    Swal.fire(
+        'Felicitaciones',
+        'Cargaste el producto al carrito',
+        'success'
+    )
 }
 
 
@@ -95,12 +116,12 @@ function cargarProductosCarrito(array) {
         <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="${productoCarrito.nombre}">
         <div class="card-body">
             <h4 class="card-title">${productoCarrito.nombre}</h4>
-            <p class="card-text">$${productoCarrito.precio}</p> 
+            <p class="card-text">$${productoCarrito.precio*precioDolar}</p> 
             <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
         </div>    
         </div>`
 
-        precioTotal += productoCarrito.precio;
+        precioTotal += productoCarrito.precio*precioDolar;
     });
 
     array.forEach((productoCarrito, indice) => {
@@ -131,34 +152,37 @@ function cargarPieza(array) {
     inputImagen.value = ""
 }
 
-btnGuardarPieza.addEventListener("click", () => {
-    cargarPieza(stock)
-})
+getData().then(stock => {
+    mostrarCatalogo(stock)
 
+    btnGuardarPieza.addEventListener("click", () => {
+        cargarPieza(stock)
+    })
+    
+    
+    btnBuscar.addEventListener("click", () => {
+        buscarProducto(buscador.value, stock)
+    })
+    
+    botonCarrito.addEventListener("click", () => {
+        cargarProductosCarrito(productosEnCarrito)
+    })
+    
+    selectOrden.addEventListener("change", () => {
+        if (selectOrden.value == 1) {
+            ordenarMayorMenor(stock)
+        }
+    
+        else if (selectOrden.value == 2) {
+            ordenarMenorMayor(stock)
+        }
+    
+        else if (selectOrden.value == 3) {
+            ordenarAlfabeticamente(stock)
+        }
+        else {
+            mostrarCatalogo(stock)
+        }
+    })
 
-btnBuscar.addEventListener("click", () => {
-    buscarProducto(buscador.value, stock)
-})
-
-botonCarrito.addEventListener("click", () => {
-    cargarProductosCarrito(productosEnCarrito)
-})
-
-selectOrden.addEventListener("change", () => {
-    if (selectOrden.value == 1) {
-        ordenarMayorMenor(stock)
-    }
-
-    else if (selectOrden.value == 2) {
-        ordenarMenorMayor(stock)
-    }
-
-    else if (selectOrden.value == 3) {
-        ordenarAlfabeticamente(stock)
-    }
-    else {
-        mostrarCatalogo(stock)
-    }
-})
-
-mostrarCatalogo(stock)
+});

@@ -1,0 +1,13 @@
+body{
+    color: black;
+    background-color: antiquewhite;
+}
+
+.lightMode{
+    color: black;
+    background-color: antiquewhite;
+}
+.darkMode{
+    color: antiquewhite;
+    background-color: black;
+}
